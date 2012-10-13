@@ -42,6 +42,8 @@ public class CodecDecoder extends FrameDecoder
 				
 				Grizzly.WriteOut("Habbo Policy sent to " + Habbo.GrabIP() + " [" + Habbo.GrabID() + "]");
 				
+				Habbo.RecievedPolicy = true;
+				
 				Channel.close();
 				
 				return null;

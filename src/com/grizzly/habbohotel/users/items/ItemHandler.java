@@ -30,6 +30,7 @@ public class ItemHandler
 			{	
 				Inventory.put(new Integer(Items.getInt("item")), Grizzly.GrabHabboHotel().GrabFurnitureHandler().GrabFurniByID(Items.getInt("item")));
 			}
+			
 		}
 	}
 	
@@ -58,5 +59,34 @@ public class ItemHandler
 	public Map<Integer, Furniture> GrabInventory()
 	{
 		return Inventory;
+	}
+	
+	public Map<Integer, Furniture> GrabFloors()
+	{
+		Map<Integer, Furniture> Items = new HashMap<Integer, Furniture>();
+		
+		for(Furniture Item : this.Inventory.values())
+		{
+			if (Item.Type.contains("s"))
+			{
+				Items.put(Item.ID, Item);
+			}
+		}
+		return Items;
+	}
+	
+	public Map<Integer, Furniture> GrabWalls()
+	{
+		Map<Integer, Furniture> Items = new HashMap<Integer, Furniture>();
+		
+		for(Furniture Item : this.Inventory.values())
+		{
+			if (Item.Type.contains("i"))
+			{
+				Items.put(Item.ID, Item);
+			}
+		}
+		
+		return Items;
 	}
 }

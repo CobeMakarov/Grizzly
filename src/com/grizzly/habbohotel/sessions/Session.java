@@ -17,6 +17,10 @@ public class Session
     
     private EventResponse Response;
     
+    public boolean RecievedPolicy;
+    
+    public int OverideID = 0;
+    
     public Session(Channel Channel, int ID) 
     {
         this.Channel = Channel;

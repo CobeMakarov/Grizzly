@@ -36,6 +36,11 @@ public class SessionHandler
 		
 		SessionList.remove(Channel);
 		
+		if (!mSession.RecievedPolicy)
+		{
+			Grizzly.GrabDatabase().RunFastQuery("DELETE FROM server_clients WHERE ticket = '" + mSession.GrabHabbo().Ticket + "'");
+		}
+		
 		Grizzly.WriteOut("Killed communication with " + mSession.GrabIP() + " [" + mSession.GrabID() + "]");
 		
 		mSession.GrabChannel().disconnect();
@@ -59,6 +64,19 @@ public class SessionHandler
 		for(Session mSession : this.SessionList.values())
 		{
 			if (mSession.GrabHabbo().ID == ID)
+			{
+				return mSession;
+			}
+		}
+		
+		return null;
+	}
+	
+	public Session GrabSessionByName(String Name)
+	{
+		for(Session mSession : this.SessionList.values())
+		{
+			if (mSession.GrabHabbo().Username == Name)
 			{
 				return mSession;
 			}

@@ -14,7 +14,7 @@ public class RoomHandler
 	{
 		Rooms = new HashMap<Integer, Room>();
 		
-		Grizzly.GrabDatabase().SetQuery("SELECT id FROM server_rooms");
+		Grizzly.GrabDatabase().SetQuery("SELECT * FROM server_rooms");
 		
 		try 
 		{
@@ -60,6 +60,21 @@ public class RoomHandler
 		return Result;
 	}
 	
+	public Map<Integer, Room> GrabPopulatedRooms()
+	{
+		Map<Integer, Room> Result = new HashMap<Integer, Room>();
+		
+		for (Room UserRoom : Rooms.values())
+		{
+			if (UserRoom.GrabRoomUsers().size() >= 1)
+			{
+				Result.put(new Integer(UserRoom.ID), UserRoom);
+			}
+		}
+		
+		return Result;
+	}
+	
 	public Map<Integer, Room> GrabRooms()
 	{
 		return Rooms;
@@ -80,7 +95,7 @@ public class RoomHandler
 				"(name, owner, description, status, password, model, wallpaper, floor, outside) VALUES " +
 				"('" + Name + "', '" + Owner + "', '" + Name + "', '0', ' ', '" + Model + "', '0', '0', '0.0')");
 		
-		Grizzly.GrabDatabase().SetQuery("SELECT id FROM server_rooms ORDER BY id DESC");
+		Grizzly.GrabDatabase().SetQuery("SELECT id FROM server_rooms ORDER BY id DESC LIMIT 1");
 		
 		int LastID = Grizzly.GrabDatabase().GrabInt();
 		

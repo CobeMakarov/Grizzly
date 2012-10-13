@@ -31,7 +31,7 @@ public class MessengerHandler
 	
 	private void LoadFriends() throws SQLException
 	{
-		Grizzly.GrabDatabase().SetQuery("SELECT * FROM server_friendships WHERE friend_one_id = '" + this.ID + "'");
+		Grizzly.GrabDatabase().SetQuery("SELECT * FROM server_friendships WHERE user_id = '" + this.ID + "'");
 		
 		if (Grizzly.GrabDatabase().RowCount() > 0)
 		{
@@ -41,11 +41,11 @@ public class MessengerHandler
 			{	
 				Friends.put(
 						new Integer(AsFirstFriend.getInt("id")), 
-						UserHandler.GenerateUser(AsFirstFriend.getInt("friend_two_id")));
+						UserHandler.GenerateUser(AsFirstFriend.getInt("friend_id")));
 			}
 		}
 		
-		Grizzly.GrabDatabase().SetQuery("SELECT * FROM server_friendships WHERE friend_two_id = '" + this.ID + "'");
+		Grizzly.GrabDatabase().SetQuery("SELECT * FROM server_friendships WHERE friend_id = '" + this.ID + "'");
 		
 		if (Grizzly.GrabDatabase().RowCount() > 0)
 		{
@@ -55,7 +55,7 @@ public class MessengerHandler
 			{	
 				Friends.put(
 						new Integer(AsSecondFriend.getInt("id")), 
-						UserHandler.GenerateUser(AsSecondFriend.getInt("friend_one_id")));
+						UserHandler.GenerateUser(AsSecondFriend.getInt("user_id")));
 			}
 		}
 	}

@@ -41,4 +41,19 @@ public class RoomUser
 			CurrentRoom.SendMessage(Message);
 		}
 	}
+	
+	public Boolean InRoom()
+	{
+		if (this.CurrentRoom == null)
+		{
+			return false;
+		}
+		
+		if (this.CurrentRoom.ID == 0)
+		{
+			return false;
+		}
+		
+		return true;
+	}
 }

@@ -77,4 +77,28 @@ public class Position
     {
         return Math.sqrt(Math.pow(this.X - New.X, 2) + Math.pow(this.Y - New.Y, 2));
     }
+	
+	public int Calculate(int NewX, int NewY)
+    {
+        int Rotation = 0;
+
+        if (X > NewX && Y > NewY)
+            Rotation = 7;
+        else if (X < NewX && Y < NewY)
+            Rotation = 3;
+        else if (X > NewX && Y < NewY)
+            Rotation = 5;
+        else if (X < NewX && Y > NewY)
+            Rotation = 1;
+        else if (X > NewX)
+            Rotation = 6;
+        else if (X < NewX)
+            Rotation = 2;
+        else if (Y < NewY)
+            Rotation = 4;
+        else if (Y > NewY)
+            Rotation = 0;
+  
+        return Rotation;
+    }
 }

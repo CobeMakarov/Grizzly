@@ -14,9 +14,22 @@ public class ComposerLibrary
     public static short GetCataPage = 3406;
     public static short BuyItem = 3737;
     public static short CanCreateRoom = 3847;
-    public static Short CreateNewRoom = 2222;
+    public static short CreateNewRoom = 2222;
     public static short LoadOwnRooms = 3853;
     public static short StartRoom = 2897;
+    public static short LoadRoomData = 2090;
+    public static short LoadFloorInventory = 3777;
+    public static short LoadHeightmap = 2840;
+	public static short StartChat = 782;
+	public static short EndChat = 348;
+	public static short RequestShout = 1508;
+	public static short Talk = 3073;
+    public static short RoomFinished = 1189;
+    public static short LookOnAllRooms = 3794;
+    public static short RequestWalk = 3635;
+    public static short RequestLeaveRoom = 2293;
+    public static short Sign; //Um..
+    public static short ChangeLooks = 1216;
     
 	/*
 	 * Outgoing
@@ -56,4 +69,26 @@ public class ComposerLibrary
 	public static int RoomEvents = 381;
 	public static int Heightmap1 = 1394;
 	public static int Heightmap2 = 3907;
+    public static int SerializeRoomData = 2559;
+	public static int SendWallItem = 1280;
+	public static int SendFloorItem = 2095;
+	public static int UpdateFloorItem = 2207;
+	public static int RemoveFloorItem = 390;
+	public static int RemoveItem = 2731;
+	public static int Bots = 1613;
+	public static int BeforeUsers = 1671;
+	public static int RoomUsers = 3293;
+	public static int FloorItems = 602;
+	public static int WallItems = 1671;
+    public static int VipWallsAndFloors = 716;
+	public static int Chat = 3612;
+	public static int Shout = 460;
+	public static int RoomPanel = 580;
+	public static int UserData = 1613;
+    public static int RoomData = 2102;
+    public static int Wave = 283;
+    public static int LeaveRoom = 2693;
+    public static int LeavingRoom = 1861;
+    public static int TypingToggle = 1267;
+    public static int UpdateInfo = 179;
 }

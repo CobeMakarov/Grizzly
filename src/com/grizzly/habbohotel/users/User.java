@@ -26,7 +26,7 @@ public class User
 		
 	public User(String IP)
 	{
-		Grizzly.GrabDatabase().SetQuery("SELECT ticket FROM server_clients WHERE ip_address = '" + IP + "'  LIMIT 1");
+		Grizzly.GrabDatabase().SetQuery("SELECT ticket FROM server_clients WHERE ip_address = '" + IP + "' AND active = '1'  LIMIT 1");
 		
 		String Ticket = Grizzly.GrabDatabase().GrabString();
 		
@@ -34,7 +34,7 @@ public class User
 		
 		if (Grizzly.GrabDatabase().RowCount() == 0)
 		{
-			Grizzly.WriteOut("Something went wrong when creating the user using ticket: " + Ticket);
+			Grizzly.WriteOut("Something went wrong when creating the user using ticket: " + Ticket + " by ip:" + IP);
 			return;
 		}
 
@@ -44,7 +44,10 @@ public class User
 		
 		this.Ticket = Ticket;
 		
-		
+		try 
+		{
+			this.Inventory = new ItemHandler(this.ID);
+		} catch (SQLException e){}
 	}
 	
 	public User(int ID)

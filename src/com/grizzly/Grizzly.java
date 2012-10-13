@@ -16,7 +16,7 @@ import java.util.Date;
 
 public class Grizzly 
 {
-	public static Version Version = new Version(1, 0, 1, 3);
+	public static Version Version = new Version(1, 0, 2, 0);
 	public static String HabboBuild = "RELEASE63-201207231112-16380487";
 	public static Date EmulatorStart;
 	
@@ -119,7 +119,7 @@ public class Grizzly
 		System.out.println();
 		
 		while(true)
-			{
+		{
 			try 
 			{
 				ConsoleCommandParser.InvokeCommand(new BufferedReader(new InputStreamReader(System.in)).readLine().toLowerCase());
