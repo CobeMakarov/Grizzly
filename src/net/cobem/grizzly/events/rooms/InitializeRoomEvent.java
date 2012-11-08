@@ -72,7 +72,7 @@ public class InitializeRoomEvent implements Event
 		Session.GrabResponse().AppendInt32(mRoom.ID);
 		Session.SendResponse();
 		
-		if (mRoom.Wallpaper != "0")
+		if (!mRoom.Wallpaper.equals("0.0"))
 		{
 			Session.GrabResponse().Initialize(ComposerLibrary.Papers);
 			Session.GrabResponse().AppendString("wallpaper");
@@ -80,7 +80,7 @@ public class InitializeRoomEvent implements Event
 			Session.SendResponse();
 		}
 
-		if (mRoom.Floor != "0")
+		if (!mRoom.Floor.equals("0.0"))
 		{
 			Session.GrabResponse().Initialize(ComposerLibrary.Papers);
 			Session.GrabResponse().AppendString("floor");
@@ -93,7 +93,7 @@ public class InitializeRoomEvent implements Event
 		Session.GrabResponse().AppendString(mRoom.Landscape);
 		Session.SendResponse();
 
-		if (mRoom.GrabRightHolders().containsKey(Session.GrabHabbo().ID))
+		if(Session.GrabActor().CurrentRoom.GrabRightHolders().contains(Session.GrabHabbo().ID))
 		{
 			Session.GrabResponse().Initialize(ComposerLibrary.LoadRightsOnRoom);
 			Session.GrabResponse().AppendInt32(4);
@@ -102,10 +102,6 @@ public class InitializeRoomEvent implements Event
 		
 		if (mRoom.Owner == Session.GrabHabbo().ID)
 		{
-			Session.GrabResponse().Initialize(ComposerLibrary.LoadRightsOnRoom);
-			Session.GrabResponse().AppendInt32(4);
-			Session.SendResponse();
-			
 			Session.GrabResponse().Initialize(ComposerLibrary.RoomOwnerPower);
 			Session.SendResponse();
 		}

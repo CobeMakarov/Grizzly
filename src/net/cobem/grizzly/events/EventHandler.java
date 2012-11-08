@@ -80,6 +80,8 @@ public class EventHandler
 		MessageLibrary.put(ComposerLibrary.RequestWave, new WaveEvent());
 		MessageLibrary.put(ComposerLibrary.PlaceItem, new PlaceItemEvent());
 		MessageLibrary.put(ComposerLibrary.RequestDance, new DanceEvent());
+		MessageLibrary.put(ComposerLibrary.StopDancing, new StopDancingEvent());
+		MessageLibrary.put(ComposerLibrary.ChangeItemPosition, new ItemPositionChangeEvent());
 	}
 	
 	private void RegisterItems()
@@ -101,11 +103,11 @@ public class EventHandler
 			}
 		}
 		
-		/*if (!MessageLibrary.containsKey(Message.GetHeader()))
+		if (!MessageLibrary.containsKey(Message.GetHeader()))
 		{
 			Grizzly.WriteOut("Unhandle'd Incoming ID: " + Message.GetHeader());
 			return;
-		}*/
+		}
 		
 		if (Grizzly.GrabConfig().GrabValue("net.grizzly.packetlog").equals("1"))
 		{
@@ -117,11 +119,11 @@ public class EventHandler
 		 * 1014 - When a menu button is clicked (those buttons on the left)
 		 * It then checks if the button is the catalog one, if so.. it runs the catalog init!
 		 */
-		if (Message.GetHeader() == 1014 && Message.GetBodyString().contains("CATALOGUE"))
+		/*if (Message.GetHeader() == 1014 && Message.GetBodyString().contains("CATALOGUE"))
 		{
 			(new InitializeCatalogEvent()).Parse(Session, Message);
 			return;
-		}
+		}*/
 
 		if (this.MessageLibrary.containsKey(Message.GetHeader()))
 		{

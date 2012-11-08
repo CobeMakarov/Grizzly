@@ -6,6 +6,7 @@ import net.cobem.grizzly.events.EventRequest;
 import net.cobem.grizzly.events.EventResponse;
 import net.cobem.grizzly.events.composers.ComposerLibrary;
 import net.cobem.grizzly.habbohotel.sessions.Session;
+import net.cobem.grizzly.plugins.HabboEvent;
 
 public class SayEvent implements Event
 {
@@ -17,12 +18,23 @@ public class SayEvent implements Event
 			return;
 		}
 		
-		String Str = Request.PopFixedString();
+		String Str;
 		
-		if (Str == "o/")
+		if (Session.GrabActor().OverrideSpeech != null)
 		{
-			(new WaveEvent()).Parse(Session, Request);
+			Str = Session.GrabActor().OverrideSpeech;
 		}
+		else
+		{
+			Str = Request.PopFixedString();
+		}
+		
+		Session.GrabActor().OverrideSpeech = null;
+		
+		//if (Str == "o/")
+		//{
+			//(new WaveEvent()).Parse(Session, Request);
+		//}
 		
 		if (Str.startsWith(":"))
 		{
@@ -42,5 +54,7 @@ public class SayEvent implements Event
 		Message.AppendInt32(0);
 		
 		Session.GrabActor().CurrentRoom.SendMessage(Message);
+		
+		Grizzly.GrabPluginHandler().RunEvent(HabboEvent.OnChat, Session);
 	}
 }

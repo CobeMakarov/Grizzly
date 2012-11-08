@@ -3,7 +3,6 @@ package net.cobem.grizzly.habbohotel.misc;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.cobem.grizzly.Grizzly;
 import net.cobem.grizzly.habbohotel.misc.commands.*;
 import net.cobem.grizzly.habbohotel.sessions.Session;
 
@@ -20,6 +19,10 @@ public class ChatCommandParser
 		AddTo("help", new Help());
 		AddTo("coords", new Coords());
 		AddTo("summon", new Summon());
+		AddTo("destructplugin", new DestructPlugin());
+		AddTo("destroyplugin", new DestructPlugin());
+		AddTo("deloadplugin", new DestructPlugin());
+		AddTo("actiontest", new ActionTest());
 	}
 	
 	private void AddTo(String Name, ChatCommand Command) //2Lazy4Lyfe
@@ -29,13 +32,21 @@ public class ChatCommandParser
 	
 	public boolean ParseChatCommand(Session mSession, String Command)
 	{
-		if (!ChatCommands.containsKey((SplitCommand(Command, true)[0]).toLowerCase()))
+		String CommandName = SplitCommand(Command, true)[0];
+		
+		if (!ChatCommands.containsKey((CommandName).toLowerCase()))
 		{
-			Grizzly.WriteOut(SplitCommand(Command, true)[0] + " is not a valid Console Command!");
+			mSession.SendAlert(CommandName + " isn't a valid chat command!", null);
 			return false;
 		}
 		
-		ChatCommands.get(SplitCommand(Command, true)[0]).Execute(mSession, SplitCommand(Command, false));
+		if (mSession.GrabHabbo().Rank < ChatCommands.get(CommandName).MinimumRank())
+		{
+			mSession.SendAlert("You don't have permission to execute " + CommandName, null);
+			return false;
+		}
+		
+		ChatCommands.get(CommandName).Execute(mSession, SplitCommand(Command, false));
 		return true;
 	}
 	

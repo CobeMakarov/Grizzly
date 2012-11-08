@@ -1,30 +1,18 @@
 package net.cobem.grizzly.events.rooms;
 
-import net.cobem.grizzly.Grizzly;
 import net.cobem.grizzly.events.Event;
 import net.cobem.grizzly.events.EventRequest;
 import net.cobem.grizzly.events.composers.ComposerLibrary;
 import net.cobem.grizzly.habbohotel.sessions.Session;
 
-public class WaveEvent implements Event
+public class StopDancingEvent implements Event
 {
 	@Override
 	public void Parse(Session Session, EventRequest Request)
 	{
-		/*
-		 * Wave = 1
-		 * Blow Kiss = 2
-		 * Laugh = 3
-		 * Hopstep = 6 (wdf is this)
-		 * Thumbs Up = 7
-		 */
-		int Whatever = Request.PopInt() + 2;
-		
-		Grizzly.WriteOut(Whatever);
-		
-		Session.GrabResponse().Initialize(ComposerLibrary.Wave);
+		Session.GrabResponse().Initialize(ComposerLibrary.Dance);
 		Session.GrabResponse().AppendInt32(Session.GrabHabbo().ID);
-		Session.GrabResponse().AppendInt32(Whatever);
+		Session.GrabResponse().AppendInt32(0);
 		Session.GrabActor().CurrentRoom.SendMessage(Session.GrabResponse());
 	}
 }

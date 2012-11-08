@@ -6,20 +6,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.cobem.grizzly.Grizzly;
-import net.cobem.grizzly.habbohotel.furni.Furniture;
 
 
 public class ItemHandler 
 {
 	private int ID;
 	
-	private Map<Integer, Furniture> Inventory;
+	private Map<Integer, InventoryItem> Inventory;
 	
 	public ItemHandler(int ID) throws SQLException
 	{
 		this.ID = ID;
 		
-		Inventory = new HashMap<Integer, Furniture>();
+		Inventory = new HashMap<Integer, InventoryItem>();
 		
 		Grizzly.GrabDatabase().SetQuery("SELECT * FROM server_users_items WHERE user = '" + ID + "'");
 		
@@ -29,7 +28,7 @@ public class ItemHandler
 			
 			while(Items.next())
 			{	
-				Inventory.put(new Integer(Items.getInt("item")), Grizzly.GrabHabboHotel().GrabFurnitureHandler().GrabFurniByID(Items.getInt("item")));
+				Inventory.put(new Integer(Items.getInt("id")), new InventoryItem(Items.getInt("id"), Items.getInt("user"), Items.getInt("item")));
 			}
 			
 		}
@@ -39,7 +38,7 @@ public class ItemHandler
 	{
 		if (Perm)
 		{
-			Grizzly.GrabDatabase().RunFastQuery("DELETE FROM server_users_items WHERE item = '" + ID + "' AND user = '" + this.ID + "'");
+			Grizzly.GrabDatabase().RunFastQuery("DELETE FROM server_users_items WHERE id = '" + ID + "' AND user = '" + this.ID + "'");
 		}
 		
 		Inventory.remove(ID);
@@ -53,22 +52,25 @@ public class ItemHandler
 			Grizzly.GrabDatabase().RunFastQuery("INSERT INTO server_users_items (user, item) VALUES ('" + this.ID + "', '" + FurniID + "')");
 		}
 		
-		Inventory.put(new Integer(FurniID), Grizzly.GrabHabboHotel().GrabFurnitureHandler().GrabFurniByID(FurniID));
+		Grizzly.GrabDatabase().SetQuery("SELECT id FROM server_users_items WHERE user = '" + this.ID + "' AND item = '" + FurniID + "' ORDER BY id DESC LIMIT 1");
+		
+		
+		Inventory.put(new Integer(Grizzly.GrabDatabase().GrabInt()), new InventoryItem(Grizzly.GrabDatabase().GrabInt(), this.ID, FurniID));
 		return true;
 	}
 	
-	public Map<Integer, Furniture> GrabInventory()
+	public Map<Integer, InventoryItem> GrabInventory()
 	{
 		return Inventory;
 	}
 	
-	public Map<Integer, Furniture> GrabFloors()
+	public Map<Integer, InventoryItem> GrabFloors()
 	{
-		Map<Integer, Furniture> Items = new HashMap<Integer, Furniture>();
+		Map<Integer, InventoryItem> Items = new HashMap<Integer, InventoryItem>();
 		
-		for(Furniture Item : this.Inventory.values())
+		for(InventoryItem Item : this.Inventory.values())
 		{
-			if (Item.Type.contains("s"))
+			if (Item.GrabBaseItem().Type.contains("s"))
 			{
 				Items.put(Item.ID, Item);
 			}
@@ -76,13 +78,13 @@ public class ItemHandler
 		return Items;
 	}
 	
-	public Map<Integer, Furniture> GrabWalls()
+	public Map<Integer, InventoryItem> GrabWalls()
 	{
-		Map<Integer, Furniture> Items = new HashMap<Integer, Furniture>();
+		Map<Integer, InventoryItem> Items = new HashMap<Integer, InventoryItem>();
 		
-		for(Furniture Item : this.Inventory.values())
+		for(InventoryItem Item : this.Inventory.values())
 		{
-			if (Item.Type.contains("i"))
+			if (Item.GrabBaseItem().Type.contains("i"))
 			{
 				Items.put(Item.ID, Item);
 			}

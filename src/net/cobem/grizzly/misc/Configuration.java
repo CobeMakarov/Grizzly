@@ -27,7 +27,7 @@ public class Configuration
 	
 	public String GrabValue(String key)
 	{
-		return Config.getProperty(key);
+		return Config.getProperty(key).trim();
 	}
 	     
 	public int __Size()

@@ -16,7 +16,7 @@ public class ParseHeightMapEvent implements Event
 		if (mRoom != null)
 		{
 			Session.GrabResponse().Initialize(ComposerLibrary.Heightmap1);
-			Session.GrabResponse().AppendString(mRoom.GrabModel().Heightmap);
+			Session.GrabResponse().AppendString(mRoom.GrabModel().Heightmap());
 			Session.SendResponse();
 			
 			Session.GrabResponse().Initialize(ComposerLibrary.Heightmap2);

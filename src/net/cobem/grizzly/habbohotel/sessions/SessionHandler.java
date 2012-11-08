@@ -35,10 +35,10 @@ public class SessionHandler
 		catch (SQLException e) 
 		{ }
 		
-		//if (mSession.GrabRoomUser().InRoom())
-		//{
+		if (mSession.GrabActor().InRoom())
+		{
 			mSession.LeaveRoom();
-		//}
+		}
 		
 		SessionList.remove(Channel);
 		

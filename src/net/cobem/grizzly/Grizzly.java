@@ -9,12 +9,13 @@ import java.util.Date;
 import net.cobem.grizzly.habbohotel.*;
 import net.cobem.grizzly.misc.*;
 import net.cobem.grizzly.net.*;
+import net.cobem.grizzly.plugins.PluginHandler;
 import net.cobem.grizzly.storage.*;
 import net.cobem.grizzly.utils.GrizzlyHelper;
 
 public class Grizzly 
 {
-	public static Version Version = new Version(1, 0, 2, 4);
+	public static Version Version = new Version(1, 0, 2, 8);
 	public static String HabboBuild = "RELEASE63-201207231112-16380487";
 	//public static String HabboBuild = "RELEASE63-201210152303-146968328";
 	public static Date EmulatorStart;
@@ -25,17 +26,30 @@ public class Grizzly
 	private static DatabaseHandler DatabaseHandler;
 	private static HabboHotel HabboHotel;
 	private static ConsoleCommandParser ConsoleCommandParser;
+	private static PluginHandler PluginHandler;
 	
 	public static void main(String[] args) 
 	{
 		EmulatorStart = new Date();
-		
-		System.out.println("Grizzly - " + Version.String());
+		System.out.println("		                           .---.                ");
+		System.out.println("                  .--.                     |   |                ");
+		System.out.println("  .--./)          |__|                     |   |.-.          .- ");
+		System.out.println("  /.''\\   .-,.--. .--.                     |   | \\ \\        / / ");
+		System.out.println("| |  | |  |  .-. ||  |                     |   |  \\ \\      / /  ");
+		System.out.println(" \\`-' /   | |  | ||  |.--------. .--------.|   |   \\ \\    / /   ");
+		System.out.println(" /(\"'`    | |  | ||  ||____    | |____    ||   |    \\ \\  / /    ");
+		System.out.println(" \\ '---.  | |  '- |  |    /   /      /   / |   |     \\ `  /     ");
+		System.out.println("  /'\"\"'.\\ | |     |__|  .'   /     .'   /  |   |      \\  /      ");
+		System.out.println(" ||     ||| |          /    /___  /    /___'---'      / /       ");
+		System.out.println("  \'. __// |_|         |         ||         |      |`-' /        ");
+		System.out.println("  `'---'              |_________||_________|       '..' ");
+		System.out.println("");
+		System.out.println(Version.String());
 		System.out.println("Built for " + HabboBuild);
 		System.out.println("Writted by Cobe 'Makarov'");
 		
 		System.out.println();
-
+		
 		DateHandler = new DateHandler();
 		
 		GrizzlyHelper Helper = new GrizzlyHelper();
@@ -86,14 +100,15 @@ public class Grizzly
 		} 
 		catch (SQLException e1) 
 		{
-			// TODO Auto-generated catch block
-			//e1.printStackTrace();
+
 		}
 		
 		WriteOut("HabboHotel Environment started in " + DateHandler.GetDateFrom(EmulatorStart, DateFormat.Seconds) + "s");
 		
 		GrabDatabase().RunFastQuery("TRUNCATE server_clients");
 		GrabDatabase().RunFastQuery("UPDATE server_users SET online = '0'");
+		
+		PluginHandler = new PluginHandler();
 		
 		WriteOut("Grizzly - Initialized in " + DateHandler.GetDateFrom(EmulatorStart, DateFormat.Seconds) + "s");
 		
@@ -146,6 +161,11 @@ public class Grizzly
 	public static ConsoleCommandParser GrabConsoleCommandParser()
 	{
 		return ConsoleCommandParser;
+	}
+	
+	public static PluginHandler GrabPluginHandler()
+	{
+		return PluginHandler;
 	}
 	
 	public static void WriteOut(Object Out)

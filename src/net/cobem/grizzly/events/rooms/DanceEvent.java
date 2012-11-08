@@ -19,7 +19,7 @@ public class DanceEvent implements Event
 		
 		Session.GrabResponse().Initialize(ComposerLibrary.Dance);
 		Session.GrabResponse().AppendInt32(Session.GrabHabbo().ID);
-		Session.GrabResponse().AppendInt32(Request.PopInt());
+		Session.GrabResponse().AppendInt32(Dance);
 		Session.GrabActor().CurrentRoom.SendMessage(Session.GrabResponse());
 	}
 

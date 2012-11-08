@@ -2,13 +2,16 @@ package net.cobem.grizzly.habbohotel.rooms;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.cobem.grizzly.Grizzly;
 import net.cobem.grizzly.events.EventResponse;
 import net.cobem.grizzly.events.composers.ComposerLibrary;
+import net.cobem.grizzly.habbohotel.pathfinding.AffectedTile;
 import net.cobem.grizzly.habbohotel.pathfinding.IPathfinder;
 import net.cobem.grizzly.habbohotel.pathfinding.Position;
 import net.cobem.grizzly.habbohotel.pathfinding.ihi.IHI_PathfinderLogic;
@@ -32,7 +35,7 @@ public class Room
 	public String OwnerByName;
 	
 	private Map<Integer, Session> Party = new HashMap<Integer, Session>();
-	private Map<Integer, Session> RightsHolders = new HashMap<Integer, Session>();
+	private List<Integer> RightsHolders = new ArrayList<Integer>();
 	private Map<Integer, Position> UserPositions = new HashMap<Integer, Position>();
 	
 	public Model mModel;
@@ -69,7 +72,7 @@ public class Room
 		
 		this.OwnerByName = Grizzly.GrabDatabase().GrabString();
 		
-		Grizzly.WriteOut(this.OwnerByName);
+		//Grizzly.WriteOut(this.OwnerByName);
 	}
 	
 	private boolean FillClass(ResultSet Set)
@@ -88,6 +91,8 @@ public class Room
 			this.Landscape = Set.getString("outside");
 			
 			this.Pathfinder = new IHI_PathfinderLogic();
+			
+			LoadRightHolders();
 			
 			Grizzly.GrabDatabase().SetQuery("SELECT * FROM server_room_items WHERE room = '" + this.ID + "'");
 			
@@ -117,9 +122,17 @@ public class Room
 			
 			for(FloorItem Item : FloorItems.values())
 			{
-				if (!Item.GetBaseItem().Sitable && !Item.GetBaseItem().Walkable)
+				for(AffectedTile Tile : AffectedTile.GetAffectedTiles(Item.GetBaseItem().Length, Item.GetBaseItem().Width, Item.X, Item.Y, Item.Rotation))
 				{
-					FurniCollisionMap[Item.X][Item.Y] = 0;
+					if (!Item.GetBaseItem().Sitable && !Item.GetBaseItem().Walkable && !Item.GetBaseItem().Layable)
+					{
+						FurniCollisionMap[Tile.X][Tile.Y] = 0;
+					}
+					
+					if (Item.GetBaseItem().Sitable || Item.GetBaseItem().Layable)
+					{
+						FurniCollisionMap[Tile.X][Tile.Y] = 2;
+					}
 				}
 			}
 			
@@ -137,7 +150,7 @@ public class Room
 		return Party;
 	}
 	
-	public Map<Integer, Session> GrabRightHolders()
+	public List<Integer> GrabRightHolders()
 	{
 		return RightsHolders;
 	}
@@ -155,6 +168,21 @@ public class Room
 		}
 	}
 	
+	public boolean LoadRightHolders()
+	{
+		Grizzly.GrabDatabase().SetQuery("SELECT * FROM server_room_rights WHERE room = '" + this.ID + "'");
+		
+		ResultSet Whatever = Grizzly.GrabDatabase().GrabTable();
+		try 
+		{
+			while(Whatever.next())
+			{
+					RightsHolders.add(Whatever.getInt("user"));
+			}
+		} catch (SQLException e){}
+		
+		return true;
+	}
 	public EventResponse GrabActorStatus()
 	{
 		EventResponse Message = new EventResponse();
@@ -266,7 +294,10 @@ public class Room
 				}
 				else
 				{
-					FurniHeightMap[x][y] = (float)0.0;
+					for(FloorItem Item : FloorItems.values())
+					{
+						FurniHeightMap[x][y] = Item.Height;	
+					}
 				}
 			}
 		}
@@ -293,15 +324,22 @@ public class Room
 		
 		for(FloorItem Item : FloorItems.values())
 		{
-			//if (!Item.GetBaseItem().Sitable)
-			//{
-				FurniCollisionMap[Item.X][Item.Y] = 0;
-			//}
+			for(AffectedTile Tile : AffectedTile.GetAffectedTiles(Item.GetBaseItem().Length, Item.GetBaseItem().Width, Item.X, Item.Y, Item.Rotation))
+			{
+				if (!Item.GetBaseItem().Sitable && !Item.GetBaseItem().Walkable && !Item.GetBaseItem().Layable)
+				{
+					FurniCollisionMap[Tile.X][Tile.Y] = 0;
+				}
 				
+				if (Item.GetBaseItem().Sitable || Item.GetBaseItem().Layable)
+				{
+					FurniCollisionMap[Tile.X][Tile.Y] = 2;
+				}
+			}
 		}
 	}
 	
-	public boolean DropItem()
+	public boolean GenerateRoomItem()
 	{
 		Grizzly.GrabDatabase().SetQuery("SELECT * FROM server_room_items WHERE room = '" + this.ID + "' ORDER BY id DESC LIMIT 1");
 			
@@ -320,6 +358,25 @@ public class Room
 		return true;
 	}
 	
+	public Map<Integer, FloorItem> GrabFloorItems()
+	{
+		return FloorItems;
+	}
+	
+	public FloorItem FindItemByID(int ID)
+	{
+		FloorItem Return = null;
+		
+		for(FloorItem Item : FloorItems.values())
+		{
+			if(Item.ID == ID)
+			{
+				Return = Item;
+			}
+		}
+		
+		return Return;
+	}
 	public void Tick()
 	{
 		//MOVEMENT
@@ -327,10 +384,9 @@ public class Room
 
 		for(Session mSession : this.GrabParty().values())
 		{
-			if(mSession.GrabActor().NeedsPathChange && mSession.GrabActor().IsMoving)
+			if (mSession.GrabActor().StopMoving && mSession.GrabActor().NeedsPathChange) //Wait a half second before starting new path
 			{
-				Grizzly.WriteOut("needspathchange");
-				
+				mSession.GrabActor().StopMoving = false;
 				mSession.GrabActor().NeedsPathChange = false;
 				
 				Collection<byte[]> Path = this.Pathfinder.Path(
@@ -341,9 +397,12 @@ public class Room
 						Grizzly.GrabHabboHotel().GrabRoomHandler().MaxDrop, 
 						Grizzly.GrabHabboHotel().GrabRoomHandler().MaxJump);
 
-					mSession.GrabActor().Move(Path);
-
-				RoomUnitMap[mSession.GrabActor().CurrentPosition.X][mSession.GrabActor().CurrentPosition.Y] = true;
+				mSession.GrabActor().Move(Path);
+			}
+			
+			if(mSession.GrabActor().NeedsPathChange && mSession.GrabActor().IsMoving)
+			{
+				mSession.GrabActor().StopMoving = true;
 			}
 			else if(mSession.GrabActor().GoalPosition != null)
 			{

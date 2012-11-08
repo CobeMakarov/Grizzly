@@ -16,11 +16,6 @@ public class Summon implements ChatCommand
 	@Override
 	public void Execute(Session mSession, String[] Arguments)
 	{
-		if(mSession.GrabHabbo().Rank < 4)
-		{
-			return;
-		}
-		
 		if(Arguments.length != 1)
 		{
 			mSession.SendAlert("Invalid number of arguments!", null);

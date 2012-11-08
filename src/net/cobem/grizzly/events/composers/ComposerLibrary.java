@@ -10,7 +10,7 @@ public class ComposerLibrary
     public static short GetProfile = 346;
     public static short AcceptFriend = 3556;
     public static short PrivateChat = 978;
-    public static short GetCataIndex = 0; //1389 or 1014??
+    public static short GetCataIndex = 1389; //1389 or 1014??
     public static short GetCataPage = 3406;
     public static short BuyItem = 3737;
     public static short CanCreateRoom = 3847;
@@ -34,6 +34,8 @@ public class ComposerLibrary
 	public static short PlaceItem = 304;
     public static short SearchRooms = 956;
     public static short RequestDance = 30;
+	public static short ChangeItemPosition = 3119;
+    public static short StopDancing = 2193;
     
 	/*
 	 * Outgoing
@@ -90,10 +92,10 @@ public class ComposerLibrary
 	public static int RoomPanel = 580;
 	public static int UserData = 1613;
     public static int RoomData = 2102;
-    public static int Wave = 283;
+    public static int Wave = 3978;
     public static int LeaveRoom = 2693;
     public static int LeavingRoom = 1861;
     public static int TypingToggle = 1267;
     public static int UpdateInfo = 179;
-    public static int Dance = 2963;
+    public static int Dance = 331;
 }

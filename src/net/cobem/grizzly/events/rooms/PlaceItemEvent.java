@@ -6,8 +6,8 @@ import net.cobem.grizzly.events.EventRequest;
 import net.cobem.grizzly.events.EventResponse;
 import net.cobem.grizzly.events.composers.ComposerLibrary;
 import net.cobem.grizzly.events.user.InitializeInventoryEvent;
-import net.cobem.grizzly.habbohotel.furni.Furniture;
 import net.cobem.grizzly.habbohotel.sessions.Session;
+import net.cobem.grizzly.habbohotel.users.items.InventoryItem;
 
 public class PlaceItemEvent implements Event
 {
@@ -31,13 +31,13 @@ public class PlaceItemEvent implements Event
 		Integer Rotation = Integer.parseInt(Bits[3]);
 		
 		//TODO: Wall Items
-		Furniture Item = Session.GrabHabbo().GrabItems().GrabFloors().get(ID);
+		InventoryItem Item = Session.GrabHabbo().GrabItems().GrabFloors().get(ID);
 		
-		Grizzly.GrabDatabase().RunFastQuery("INSERT INTO server_room_items (room, x, y, base, rotation, height, extra) VALUES ('" + Session.GrabActor().CurrentRoom.ID + "', '" + X + "', '" + Y + "', '" + Item.ID + "', '" + Rotation + "', '" + (float)Session.GrabActor().CurrentRoom.GrabModel().GrabTileHeight(X, Y) + "',' ')");
+		Grizzly.GrabDatabase().RunFastQuery("INSERT INTO server_room_items (room, x, y, base, rotation, height, extra) VALUES ('" + Session.GrabActor().CurrentRoom.ID + "', '" + X + "', '" + Y + "', '" + Item.GrabBaseItem().ID + "', '" + Rotation + "', '" + (float)Session.GrabActor().CurrentRoom.GrabModel().GrabTileHeight(X, Y) + "',' ')");
 		
 		Message.Initialize(ComposerLibrary.SendFloorItem);
 		Message.AppendInt32(ID);
-		Message.AppendInt32(Item.Sprite);
+		Message.AppendInt32(Item.GrabBaseItem().Sprite);
 		Message.AppendInt32(X);
 		Message.AppendInt32(Y);
 		Message.AppendInt32(Rotation);
@@ -46,7 +46,7 @@ public class PlaceItemEvent implements Event
 		Message.AppendInt32(0);
 		Message.AppendString("0"); // TODO: Triggers
 		Message.AppendInt32(-1);
-		Message.AppendInt32(Item.Interaction.equals("default") ? 1 : 0);
+		Message.AppendInt32(Item.GrabBaseItem().Interaction.equals("default") ? 1 : 0);
 		Message.AppendInt32(Session.GrabActor().CurrentRoom.Owner);
 		Message.AppendString(Session.GrabActor().CurrentRoom.OwnerByName);
 		
@@ -60,9 +60,9 @@ public class PlaceItemEvent implements Event
 		
 		(new InitializeInventoryEvent()).Parse(Session, Request);
 		
-		Session.GrabActor().CurrentRoom.DropItem(); //Not sure what the hell is going on..
+		Session.GrabActor().CurrentRoom.GenerateRoomItem(); //Not sure what the hell is going on..
 		
-		Session.GrabActor().CurrentRoom.RegenerateCollisionMap();
+		//Session.GrabActor().CurrentRoom.RegenerateCollisionMap();
 	}
 
 }

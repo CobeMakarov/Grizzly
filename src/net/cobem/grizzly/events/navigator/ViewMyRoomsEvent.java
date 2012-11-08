@@ -35,7 +35,7 @@ public class ViewMyRoomsEvent implements Event
 			Session.GrabResponse().AppendString(mRoom.Title);
 			Session.GrabResponse().AppendBoolean(true);
 			Session.GrabResponse().AppendInt32(mRoom.Owner);
-			Session.GrabResponse().AppendString(Session.GrabHabbo().Username);
+			Session.GrabResponse().AppendString(mRoom.OwnerByName);
 			Session.GrabResponse().AppendInt32(mRoom.State); // mRoom state
 			Session.GrabResponse().AppendInt32(mRoom.GrabParty().size());
 			Session.GrabResponse().AppendInt32(50);// Max users

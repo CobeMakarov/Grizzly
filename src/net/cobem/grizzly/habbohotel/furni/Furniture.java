@@ -26,6 +26,7 @@ public class Furniture
 	public Boolean Tradeable;
 	public Boolean Sellable;
     public Boolean Giftable;
+    public Boolean Layable;
     
     public List<Integer> Vendors;
     
@@ -62,7 +63,7 @@ public class Furniture
 			this.Tradeable = (Set.getInt("allow_trade") == 1);
 			this.Sellable = (Set.getInt("allow_marketplace_sell") == 1);
 			this.Giftable = (Set.getInt("allow_gift") == 1);
-			
+			this.Layable = (this.Interaction == "bed");
 			return true;
 		}
 		catch(SQLException Ex)

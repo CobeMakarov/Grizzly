@@ -76,7 +76,7 @@ public class RoomHandler
 	{
 		Map<Integer, Room> Result = GrabUsersRooms(User);
 		
-		Grizzly.GrabDatabase().SetQuery("SELECT * FROM server_rooms");
+		Grizzly.GrabDatabase().SetQuery("SELECT * FROM server_rooms WHERE owner = '" + User + "'");
 		
 		try 
 		{
@@ -134,11 +134,13 @@ public class RoomHandler
 	{
 		Grizzly.GrabDatabase().RunFastQuery("INSERT INTO server_rooms " +
 				"(name, owner, description, status, password, model, wallpaper, floor, outside) VALUES " +
-				"('" + Name + "', '" + Owner + "', '" + Name + "', '0', ' ', '" + Model + "', '0', '0', '0.0')");
+				"('" + Name + "', '" + Owner + "', '" + Name + "', '0', ' ', '" + Model + "', '0.0', '0.0', '0.0')");
 		
 		Grizzly.GrabDatabase().SetQuery("SELECT id FROM server_rooms ORDER BY id DESC LIMIT 1");
 		
 		int LastID = Grizzly.GrabDatabase().GrabInt();
+		
+		Grizzly.GrabDatabase().RunFastQuery("INSERT INTO server_room_rights (room, user) VALUES ('" + LastID + "', '" + Owner + "')");
 		
 		Rooms.put(new Integer(LastID), new Room(LastID));
 		return LastID;

@@ -45,6 +45,16 @@ public class FloorItem implements iSerializeEvent
 			return false;
 		}
 	}
+	
+	public FloorItem(int ID)
+	{
+		Grizzly.GrabDatabase().SetQuery("SELECT * FROM server_room_items WHERE id = '" + ID + "'");
+		
+		ResultSet Results = Grizzly.GrabDatabase().GrabRow();
+			
+		FillClass(Results);
+	}
+	
 	public Furniture GetBaseItem()
 	{
 		return Grizzly.GrabHabboHotel().GrabFurnitureHandler().GrabFurniByID(Base);

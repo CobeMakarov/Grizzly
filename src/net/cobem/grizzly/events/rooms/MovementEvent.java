@@ -13,7 +13,11 @@ public class MovementEvent implements Event
 		int X = Request.PopInt();
 		int Y = Request.PopInt();
 		
-		Session.GrabActor().NeedsPathChange = true;
+		if (Session.GrabActor().IsMoving)
+		{
+			Session.GrabActor().NeedsPathChange = true;
+		}
+		
 		Session.GrabActor().GoalPosition = new Position(X, Y, Session.GrabActor().CurrentPosition.Z);
 	}
 }

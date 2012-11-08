@@ -41,16 +41,16 @@ public class LoadUserDataEvent implements Event
 		 * Club
 		 */
 		Message.Initialize(ComposerLibrary.ClubData);
-		Message.AppendString("club_vip");
-        Message.AppendInt32(200); // DaysLeft
-        Message.AppendInt32(200); // Months Left
-        Message.AppendInt32(200); // Years left wtf?
-        Message.AppendInt32(2); // VIP (1 = no / 2 = yes)
-        Message.AppendBoolean(false);
+		Message.AppendString("habbo_vip");
+        Message.AppendInt32(90); // DaysLeft
+        Message.AppendInt32(3); // Months Left
+        Message.AppendInt32(0); // Years left wtf?
+        Message.AppendInt32(1); // VIP (0 = no / 1 = yes)
         Message.AppendBoolean(true);
-        Message.AppendInt32(100);
+        Message.AppendBoolean(true);
+        Message.AppendInt32(0);
         Message.AppendInt32(20); // Days I have
-        Message.AppendInt32(100);
+        Message.AppendInt32(28022);
 		Session.SendResponse(Message);
 		
 		/*
