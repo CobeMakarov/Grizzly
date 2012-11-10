@@ -26,7 +26,10 @@ public class Actor
 	
 	public boolean IsMoving;
 	public boolean NeedsPathChange;
-	public boolean StopMoving;
+	public boolean NewPathReady;
+	public boolean Frozen;
+	
+	public Collection<byte[]> CurrentPath;
 	
 	public String OverrideSpeech;
 	
@@ -84,21 +87,27 @@ public class Actor
 			new ShoutEvent().Parse(Session, null);
 		}
 	}
-	public void Move(Collection<byte[]> Path)
+	public void Move(boolean NewPath)
 	{
-		if (Path.isEmpty())
+		if (CurrentPath.isEmpty())
 		{
 			return;
+		}
+		
+		if (NewPath)
+		{
+			NeedsPathChange = false;
 		}
 		
 		this.IsMoving = true;
 		
 		//while(this.CurrentPosition.GrabPair() != this.GoalPosition.GrabPair())
 		//{
-			for(byte[]NextStep : Path)
+			for(byte[]NextStep : CurrentPath)
 			{
-				if (StopMoving)
+				if (NeedsPathChange)
 				{
+					this.UpdateStatus("");
 					break;
 				}
 				
@@ -165,6 +174,6 @@ public class Actor
 		}
 		
 		this.IsMoving = false;
-		this.GoalPosition = null;
+		//this.GoalPosition = null;
 	}
 }

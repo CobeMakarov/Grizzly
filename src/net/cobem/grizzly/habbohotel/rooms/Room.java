@@ -384,11 +384,8 @@ public class Room
 
 		for(Session mSession : this.GrabParty().values())
 		{
-			if (mSession.GrabActor().StopMoving && mSession.GrabActor().NeedsPathChange) //Wait a half second before starting new path
+			if(mSession.GrabActor().NeedsPathChange) //Give them .5 of a second to get ready for their new path
 			{
-				mSession.GrabActor().StopMoving = false;
-				mSession.GrabActor().NeedsPathChange = false;
-				
 				Collection<byte[]> Path = this.Pathfinder.Path(
 						(byte)mSession.GrabActor().CurrentPosition.X, 
 						(byte)mSession.GrabActor().CurrentPosition.Y, 
@@ -396,18 +393,14 @@ public class Room
 						(byte)mSession.GrabActor().GoalPosition.Y, 
 						Grizzly.GrabHabboHotel().GrabRoomHandler().MaxDrop, 
 						Grizzly.GrabHabboHotel().GrabRoomHandler().MaxJump);
-
-				mSession.GrabActor().Move(Path);
-			}
-			
-			if(mSession.GrabActor().NeedsPathChange && mSession.GrabActor().IsMoving)
-			{
-				mSession.GrabActor().StopMoving = true;
-			}
-			else if(mSession.GrabActor().GoalPosition != null)
-			{
-				mSession.GrabActor().NeedsPathChange = false;
 				
+				mSession.GrabActor().CurrentPath = Path;
+				
+				mSession.GrabActor().Move(true);
+				//mSession.GrabActor().NewPathReady = true;
+			}
+			else if(mSession.GrabActor().GoalPosition != null && !mSession.GrabActor().IsMoving && !mSession.GrabActor().NeedsPathChange) //Start moving them
+			{
 				Collection<byte[]> Path = this.Pathfinder.Path(
 						(byte)mSession.GrabActor().CurrentPosition.X, 
 						(byte)mSession.GrabActor().CurrentPosition.Y, 
@@ -415,11 +408,13 @@ public class Room
 						(byte)mSession.GrabActor().GoalPosition.Y, 
 						Grizzly.GrabHabboHotel().GrabRoomHandler().MaxDrop, 
 						Grizzly.GrabHabboHotel().GrabRoomHandler().MaxJump);
-
-					mSession.GrabActor().Move(Path);
-
-				RoomUnitMap[mSession.GrabActor().CurrentPosition.X][mSession.GrabActor().CurrentPosition.Y] = true;
+				
+				mSession.GrabActor().CurrentPath = Path;
+				
+				mSession.GrabActor().Move(false);
 			}	
+			
+			RoomUnitMap[mSession.GrabActor().CurrentPosition.X][mSession.GrabActor().CurrentPosition.Y] = true;
 			
 			this.Pathfinder.ApplyCollisionMap(GenerateCollisionMap(RoomUnitMap), GenerateFurniHeightMap());
 			

@@ -25,7 +25,7 @@ public class ChatCommandParser
 		AddTo("actiontest", new ActionTest());
 	}
 	
-	private void AddTo(String Name, ChatCommand Command) //2Lazy4Lyfe
+	public void AddTo(String Name, ChatCommand Command) //2Lazy4Lyfe
 	{
 		ChatCommands.put(Name, Command);
 	}

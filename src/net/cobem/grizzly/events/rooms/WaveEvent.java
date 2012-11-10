@@ -1,6 +1,5 @@
 package net.cobem.grizzly.events.rooms;
 
-import net.cobem.grizzly.Grizzly;
 import net.cobem.grizzly.events.Event;
 import net.cobem.grizzly.events.EventRequest;
 import net.cobem.grizzly.events.composers.ComposerLibrary;
@@ -18,9 +17,7 @@ public class WaveEvent implements Event
 		 * Hopstep = 6 (wdf is this)
 		 * Thumbs Up = 7
 		 */
-		int Whatever = Request.PopInt() + 2;
-		
-		Grizzly.WriteOut(Whatever);
+		int Whatever = Request.PopInt();
 		
 		Session.GrabResponse().Initialize(ComposerLibrary.Wave);
 		Session.GrabResponse().AppendInt32(Session.GrabHabbo().ID);

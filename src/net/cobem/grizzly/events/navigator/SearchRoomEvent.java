@@ -27,8 +27,13 @@ public class SearchRoomEvent implements Event
 		EventResponse Message = new EventResponse();
 		
 		String Query = Search.split(":")[0];
-		String Value = UserInputFilter.filterString(Search.split(":")[1], false);
+		String Value = null;
 		
+		if (Search.contains(":"))
+		{
+			Value = UserInputFilter.filterString(Search.split(":")[1], false);
+		}
+
 		if (Query != null && Value != null)
 		{
 			switch (Query)
@@ -54,6 +59,10 @@ public class SearchRoomEvent implements Event
 						//
 					}
 				break;
+				
+				case "user_count":
+					
+				break;
 			}
 		}
 		else
@@ -77,7 +86,7 @@ public class SearchRoomEvent implements Event
 		
 		
 		Message.Initialize(ComposerLibrary.OwnRooms);
-		Message.AppendInt32(5);
+		Message.AppendInt32(2);
 		Message.AppendString("");
 		Message.AppendInt32(Return.size());
 		
@@ -86,16 +95,13 @@ public class SearchRoomEvent implements Event
 			Message.AppendInt32(mRoom.ID);
 			Message.AppendBoolean(false);
 			Message.AppendString(mRoom.Title);
+			Message.AppendBoolean(true);
 			Message.AppendInt32(mRoom.Owner);
 			Message.AppendString(mRoom.OwnerByName);
-			Message.AppendInt32(0);
+			Message.AppendInt32(50);
 			Message.AppendInt32(0); // User's in room
 			Message.AppendInt32(25);
 			Message.AppendString(mRoom.Description);
-			Message.AppendInt32(0);
-			Message.AppendInt32(0);
-			Message.AppendInt32(0);
-			Message.AppendInt32(2);
 			Message.AppendInt32(0);
 			Message.AppendInt32(0);
 			Message.AppendInt32(0);
@@ -103,10 +109,15 @@ public class SearchRoomEvent implements Event
 			Message.AppendInt32(0);
 			Message.AppendInt32(0);
 			Message.AppendString("");
+			Message.AppendInt32(0);
+			Message.AppendInt32(0);
+			Message.AppendInt32(0);
+			Message.AppendInt32(0);
 			Message.AppendBoolean(true);
 			Message.AppendBoolean(true);
 		}
 		
+		Message.AppendBoolean(false);
 		Session.SendResponse(Message);
 	}
 
